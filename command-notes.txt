@@ -1,2 +1,4 @@
 mkdir -p .github/workflows
 touch .github/workflows/workflow.yml
+//set github to use token with username
+ git remote set-url origin https://timnguyenpccw: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@github.com/timnguyen8/gha.git

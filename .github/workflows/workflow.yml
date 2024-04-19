@@ -2,14 +2,29 @@ name: CI workflow
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - '*'
   pull_request:
-    branches: ["main"]
+    branches:
+      - '*'
 jobs:
   build:
     runs-on: ubuntu-latest
     container: python:3.9-slim
+    steps:
+      - name: Step 1 - Checkout
+        uses: actions/checkout@v3
 
+      - name: Step 2 - Install python dependencies
+        run: | #use pipe to run multipe commands in one step
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
+      - name: Step 3 - Lint with Flake8
+        run: |
+          flake8 service --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 service --count --max-complexity=10 --max-line-length=127 --statistics
 
-
+      - name: Step 4 - Test Code Coverage with nosetests
+        run:
+          nosetests -v --with-spec --spec-color --with-coverage --cover-package=app
